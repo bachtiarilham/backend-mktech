@@ -1,20 +1,20 @@
 package delivery
 
 import (
+	authDelivery "ptmuda.tech/backend/internal/auth/delivery"
+	cfDelivery "ptmuda.tech/backend/internal/cashflow/delivery"
 	"ptmuda.tech/backend/internal/delivery/middleware"
 	"ptmuda.tech/backend/internal/delivery/rest"
-	authHandler "ptmuda.tech/backend/internal/delivery/rest/auth"
-	cfHandler "ptmuda.tech/backend/internal/delivery/rest/cashflow"
-	prodHandler "ptmuda.tech/backend/internal/delivery/rest/product"
-	telHandler "ptmuda.tech/backend/internal/delivery/rest/telemetry"
+	prodDelivery "ptmuda.tech/backend/internal/product/delivery"
+	telDelivery "ptmuda.tech/backend/internal/telemetry/delivery"
 )
 
 type Handlers struct {
 	Health         *rest.HealthHandler
-	Auth           *authHandler.Handler
-	Product        *prodHandler.Handler
-	Cashflow       *cfHandler.Handler
-	Telemetry      *telHandler.Handler
+	Auth           *authDelivery.Handler
+	Product        *prodDelivery.Handler
+	Cashflow       *cfDelivery.Handler
+	Telemetry      *telDelivery.Handler
 	AdminVerifier  middleware.AdminVerifier
 	DeviceVerifier middleware.DeviceVerifier
 }

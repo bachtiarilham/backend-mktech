@@ -44,7 +44,6 @@ func (h *Hub) Broadcast(snapshot model.TelemetrySnapshot) {
 		select {
 		case ch <- snapshot:
 		default:
-			// Non-blocking: skip if client buffer is full
 		}
 	}
 }

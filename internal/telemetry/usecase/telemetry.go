@@ -100,7 +100,6 @@ func (u *UseCase) Ingest(ctx context.Context, in telModel.IngestTelemetryRequest
 		IsOnline:        true,
 	}
 
-	// Siarkan ke SSE Hub secara real-time
 	u.hub.Broadcast(*snapshot)
 
 	return snapshot, nil
@@ -130,7 +129,6 @@ func (u *UseCase) Latest(ctx context.Context, deviceID int64) (*telModel.Telemet
 	if rt := coreModel.Text(rec, "recorded_at"); rt != "" {
 		if t, err := time.Parse(time.RFC3339, rt); err == nil {
 			snap.RecordedAt = t
-			// If last record is older than 30 seconds, consider offline
 			snap.IsOnline = time.Since(t) < 30*time.Second
 		}
 	}

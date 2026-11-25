@@ -27,7 +27,6 @@ func Router(opts Options, h Handlers) *gin.Engine {
 
 	_ = r.SetTrustedProxies(opts.TrustedProxies)
 
-	// Global Middleware
 	r.Use(
 		middleware.SecurityHeaders(),
 		middleware.AccessLog(),
@@ -36,18 +35,15 @@ func Router(opts Options, h Handlers) *gin.Engine {
 		middleware.CORS(opts.AllowedOrigins),
 	)
 
-	// Probes
 	r.GET("/healthz", h.Health.Live)
 	r.HEAD("/healthz", h.Health.Live)
 	r.GET("/readyz", h.Health.Ready)
 	r.HEAD("/readyz", h.Health.Ready)
 
-	// Public Admin Auth Routes
 	apiV1 := r.Group("/api/v1")
 	authPublic := apiV1.Group("/admin/auth")
 	h.Auth.PublicRoutes(authPublic)
 
-	// Protected Admin Routes (RequireAdmin)
 	adminProtected := apiV1.Group("/admin", middleware.RequireAdmin(h.AdminVerifier))
 	authProtected := adminProtected.Group("/auth")
 	h.Auth.ProtectedRoutes(authProtected)
@@ -58,12 +54,10 @@ func Router(opts Options, h Handlers) *gin.Engine {
 	cashflowsGroup := adminProtected.Group("/cashflows")
 	h.Cashflow.Routes(cashflowsGroup)
 
-	// Telemetry Routes
 	telemetryGroup := apiV1.Group("/telemetry")
 	h.Telemetry.IngestRoute(telemetryGroup, middleware.RequireDeviceKey(h.DeviceVerifier))
 	h.Telemetry.PublicRoutes(telemetryGroup)
 
-	// 404 & 405 handlers
 	r.NoRoute(func(c *gin.Context) {
 		response.WriteError(c, apperror.ErrNotFound)
 	})

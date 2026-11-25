@@ -1,4 +1,4 @@
-package product
+package delivery
 
 import (
 	"strconv"

@@ -16,7 +16,6 @@ var file *os.File
 
 type ctxLoggerKey struct{}
 
-// Init runs after dotenv is loaded. Logging failures never prevent startup.
 func Init() {
 	jsonConfig := zap.NewProductionEncoderConfig()
 	jsonConfig.TimeKey, jsonConfig.LevelKey = "time", "level"
@@ -62,7 +61,6 @@ func Init() {
 		zap.Fields(zap.String("service", service), zap.String("hostname", hostname)))
 }
 
-// Sync flushes sinks and closes the owned file after application shutdown.
 func Sync() {
 	_ = Log.Sync()
 	if file != nil {

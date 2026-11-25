@@ -31,7 +31,6 @@ func (u *UseCase) Create(ctx context.Context, in prodModel.CreateProductRequest,
 	in.SKU = sku
 	in.Name = name
 
-	// Cek SKU
 	existing, err := u.repo.GetBySKU(ctx, sku)
 	if err == nil && existing != nil {
 		return nil, apperror.Public(apperror.ErrConflict, fmt.Sprintf("Produk dengan SKU '%s' sudah terdaftar", sku))
@@ -77,7 +76,6 @@ func (u *UseCase) List(ctx context.Context, f prodModel.ProductFilter) (*respons
 	if f.Limit <= 0 || f.Limit > 100 {
 		f.Limit = 10
 	}
-	// Fetch limit + 1 to check has_more
 	records, err := u.repo.List(ctx, prodModel.ProductFilter{
 		Cursor:   f.Cursor,
 		Limit:    f.Limit + 1,

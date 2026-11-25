@@ -1,4 +1,4 @@
-package telemetry
+package delivery
 
 import (
 	"encoding/json"
@@ -136,7 +136,6 @@ func (h *Handler) Stream(c *gin.Context) {
 	ch := h.uc.Subscribe()
 	defer h.uc.Unsubscribe(ch)
 
-	// Send initial ping event
 	c.SSEvent("ping", gin.H{"time": time.Now().Format(time.RFC3339)})
 	c.Writer.Flush()
 

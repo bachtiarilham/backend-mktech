@@ -1,4 +1,4 @@
-package auth
+package delivery
 
 import (
 	"net/http"
@@ -52,7 +52,6 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 
-	// Set HttpOnly refresh cookie
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie(h.opts.CookieName, tokens.RefreshToken, int(7*24*3600), "/", "", h.opts.Secure, true)
 
@@ -62,7 +61,6 @@ func (h *Handler) Login(c *gin.Context) {
 func (h *Handler) Refresh(c *gin.Context) {
 	cookie, err := c.Cookie(h.opts.CookieName)
 	if err != nil || cookie == "" {
-		// Also check header or JSON body if cookie is not present
 		var body struct {
 			RefreshToken string `json:"refresh_token"`
 		}
@@ -100,7 +98,6 @@ func (h *Handler) Logout(c *gin.Context) {
 		_ = h.uc.Logout(c.Request.Context(), admin.SessionID)
 	}
 
-	// Clear cookie
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie(h.opts.CookieName, "", -1, "/", "", h.opts.Secure, true)
 

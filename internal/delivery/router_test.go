@@ -30,7 +30,6 @@ func TestRouterRoutes(t *testing.T) {
 		RequestTimeout: cfg.RequestTimeout,
 	}, container.Handlers)
 
-	// 1. Test /healthz
 	reqLive, _ := http.NewRequest(http.MethodGet, "/healthz", nil)
 	wLive := httptest.NewRecorder()
 	r.ServeHTTP(wLive, reqLive)
@@ -38,7 +37,6 @@ func TestRouterRoutes(t *testing.T) {
 		t.Errorf("expected 200 on /healthz, got %d", wLive.Code)
 	}
 
-	// 2. Test Protected Admin Route without Token (Expect 401)
 	reqProd, _ := http.NewRequest(http.MethodGet, "/api/v1/admin/products", nil)
 	wProd := httptest.NewRecorder()
 	r.ServeHTTP(wProd, reqProd)
@@ -46,7 +44,6 @@ func TestRouterRoutes(t *testing.T) {
 		t.Errorf("expected 401 on /api/v1/admin/products without token, got %d", wProd.Code)
 	}
 
-	// 4. Test Ingest Route without Device Key (Expect 401)
 	reqIngest, _ := http.NewRequest(http.MethodPost, "/api/v1/telemetry/ingest", nil)
 	wIngest := httptest.NewRecorder()
 	r.ServeHTTP(wIngest, reqIngest)
